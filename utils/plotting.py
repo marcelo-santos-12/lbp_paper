@@ -10,22 +10,22 @@ from sklearn.metrics import plot_roc_curve
 plt.style.use('ggplot')
 
 
-def plot_results(_id, best_clf, x_test, y_test, method, variant, P, R):
+def plot_results(_id, best_clf, x_test, y_test, method, variant, P, R, output):
 
-    if not os.path.exists('ARR_ROC/'+variant+'/y_pred'):
-        os.makedirs('ARR_ROC/'+variant+'/y_pred')
+    if not os.path.exists(output + '/ARR_ROC/'+variant+'/y_pred'):
+        os.makedirs(output + '/ARR_ROC/'+variant+'/y_pred')
     
-    if not os.path.exists('ARR_ROC/'+variant+'/y_pred_roc'):
-        os.makedirs('ARR_ROC/'+variant+'/y_pred_roc')
+    if not os.path.exists(output + '/ARR_ROC/'+variant+'/y_pred_roc'):
+        os.makedirs(output + '/ARR_ROC/'+variant+'/y_pred_roc')
     
     from sklearn.metrics._plot.base  import _get_response
     y_pred_roc, _ = _get_response(x_test, best_clf, 'auto', pos_label=None)
     
-    arr_roc = 'ARR_ROC/{}/y_pred_roc/{}_{}_{}_{}.txt'.format(variant, method, _id.replace(' ', ''), str(P), str(R))
+    arr_roc = output + '/ARR_ROC/{}/y_pred_roc/{}_{}_{}_{}.txt'.format(variant, method, _id.replace(' ', ''), str(P), str(R))
     np.savetxt(arr_roc, y_pred_roc)
 
     y_predict = best_clf.predict(x_test)
-    arr_roc = 'ARR_ROC/{}/y_pred/{}_{}_{}_{}.txt'.format(variant, method, _id.replace(' ', ''), str(P), str(R))
+    arr_roc = output + '/ARR_ROC/{}/y_pred/{}_{}_{}_{}.txt'.format(variant, method, _id.replace(' ', ''), str(P), str(R))
     np.savetxt(arr_roc, y_predict)
 
     plot_roc_curve(best_clf, x_test, y_test)
@@ -37,8 +37,8 @@ def plot_results(_id, best_clf, x_test, y_test, method, variant, P, R):
     plt.title('{} - {}/{} - P: {}, R:{}'.format(_id, method, variant, P, R))
     plt.legend(loc="lower right")
     
-    if not os.path.exists('ROC_'+variant):
-        os.makedirs('ROC_'+variant)
+    if not os.path.exists(output + '/ROC_'+variant):
+        os.makedirs(output + '/ROC_'+variant)
 
-    plt.savefig('ROC_{}/{}_{}_{}_{}_{}.png'.format(variant, variant, method, _id.replace(' ', ''), P, R))
+    plt.savefig(output + '/ROC_{}/{}_{}_{}_{}_{}.png'.format(variant, variant, method, _id.replace(' ', ''), P, R))
     plt.close()

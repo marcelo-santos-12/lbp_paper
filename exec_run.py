@@ -34,12 +34,12 @@ VARIANTS = {
     'hamming_lbp': 'HAMMING LBP'
 }
 
-def run(dataset, variant, method, P, R, size_train_percent, save_descriptors=True):
+def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, output):
     ################ computing image descriptors #######################################
-    print('Experimento: Descritor= {}, P = {}, R = {}'.format(VARIANTS[variant], P, R))
+    print('Experimento: Descritor= {}, Method={}, P = {}, R = {}'.format(VARIANTS[variant], method, P, R))
 
-    path_cur = os.path.join('descriptors', variant, method + '_' + str(P) +'_' +str(R)) 
-    if save_descriptors:
+    path_cur = os.path.join(output, 'descriptors', variant, method + '_' + str(P) +'_' +str(R)) 
+    if not load_descriptors:
         print('Computando recursos...')
         x_train, y_train, x_test, y_test = compute_features(path_dataset=dataset, \
                         descriptor=ALGORITHM[variant], P=P, R=R, method=method, size_train=size_train_percent)
@@ -60,17 +60,18 @@ def run(dataset, variant, method, P, R, size_train_percent, save_descriptors=Tru
             print("Descritores não computados")
             quit()
 
-    if not os.path.exists('ARR_ROC'):
-        os.makedirs('ARR_ROC')
+    if not os.path.exists(output + '/ARR_ROC'):
+        os.makedirs(output + '/ARR_ROC')
     
-    arr_file = 'ARR_ROC/' + '{}_y_true_{}_{}_{}.txt'.format(variant, method, P, R)
+    arr_file = output + '/ARR_ROC/' + '{}_y_true_{}_{}_{}.txt'.format(variant, method, P, R)
+    print(arr_file)
     np.savetxt(arr_file, y_test)
     
     n_features = x_train[0].shape[0]
     print('Comprimento do vetor de recursos: ', n_features)
 
-    if os.path.exists('results.csv'):
-        df = pd.read_csv('results.csv')
+    if os.path.exists(output + '/results.csv'):
+        df = pd.read_csv(output + '/results.csv')
     else:
         columns = ['classifier', 'variant', 'method', '(P, R)', 'parameters', \
                    'best_matthews','fscore', 'accuracy', 'confusion_matrix','auc_roc', 'n_features']
@@ -134,7 +135,7 @@ def run(dataset, variant, method, P, R, size_train_percent, save_descriptors=Tru
 
         ################### Computing Performance #################################
         # Compute ROC curve and area the curve
-        plot_results(_id, res_search['best_clf'], x_test, y_test, method.upper(), VARIANTS[variant], P, R)
+        plot_results(_id, res_search['best_clf'], x_test, y_test, method.upper(), VARIANTS[variant], P, R, output)
 
         # Get AUC, F1Score and Accuracy metrics
         print(35 * '# ')
@@ -164,7 +165,7 @@ def run(dataset, variant, method, P, R, size_train_percent, save_descriptors=Tru
 
         df = df.append(res_curr, ignore_index=True)
 
-    df.to_csv('results.csv', index=False)
+    df.to_csv(output + '/results.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -197,12 +198,20 @@ if __name__ == '__main__':
     parser.add_argument('--size_train', '-s', help='Length of train dataset', type=float, \
         default=.8)
 
+    # path_results
+    parser.add_argument('--output', '-o', help='Path to output results', type=str, \
+        default='results')
+
+    # path_results
+    parser.add_argument('--load', '-l', help='Save descriptors computed', type=bool, \
+        default=False)
+
     args = parser.parse_args()
 
     if not os.path.exists(args.dataset):
         print('Invalid Path to dataset...')
         quit()
 
-
     run(dataset=args.dataset, variant=args.variant, \
-        method=args.method, P=args.points, R=args.radius, size_train_percent=args.size_train)
+        method=args.method, P=args.points, R=args.radius,\
+        size_train_percent=args.size_train, load_descriptors=args.load, output=args.output)
