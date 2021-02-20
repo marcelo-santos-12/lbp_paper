@@ -17,7 +17,7 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l
     ----------
         path_dataset: (str)
             Diretorio que contem as imagens a serem classificadas
-        
+
         descriptor: (function)
             Funcao que calcula os descritores das imagens
 
@@ -39,20 +39,13 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l
         length_dir = len(dir_iter)
         ind_max_train = int(size_train * length_dir)
 
-        cont = 0
-
-        ind_max_train = 80
-    
         for i, name_img in enumerate(tqdm(dir_iter)):
 
-            if cont == 100:
-                break
-            
             try:
                 img = cv2.imread(name_img, cv2.IMREAD_GRAYSCALE)
             except:
                 print('Não é possível ler arquivo:', name_img)
-            
+
             # calcula o array descritor da imagem atual
             feature = descriptor(img, P=P, R=R, block=(1, 1), method=method)
 
