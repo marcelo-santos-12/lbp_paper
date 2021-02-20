@@ -53,17 +53,10 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l
             except:
                 print('Não é possível ler arquivo:', name_img)
             
-            # garante que as imagens terao as mesma dimensoes
-            try:
-                raise Exception(img.shape != (460, 700))
-
-            except:
-                img = cv2.resize(img, (460, 700))
-            
             # calcula o array descritor da imagem atual
             feature = descriptor(img, P=P, R=R, block=(1, 1), method=method)
 
-            feature = normalize(feature.reshape(1, -1), norm='l1').reshape(-1,)
+            feature = normalize(feature.reshape(1, -1), norm=norm).reshape(-1,)
 
             # adiciona ao conjunto de treinamento
             if i < ind_max_train:
@@ -74,7 +67,5 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l
             else:
                 x_test.append(list(feature))
                 y_test.append(index)
-
-            cont += 1
 
     return np.asarray(x_train), np.asarray(y_train), np.asarray(x_test), np.asarray(y_test)
