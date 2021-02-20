@@ -1,0 +1,7 @@
+classifier,variant,method,"(P, R)",parameters,best_matthews,fscore,accuracy,confusion_matrix,auc_roc,n_features
+Random Forest,ORIGINAL LBP,uniform,"(24, 3)","{'n_estimators': 51, 'criterion': 'gini', 'max_depth': 100}",46.48,75.56,72.5,"[[12  8]
+ [ 3 17]]",72.5,26
+SVM,ORIGINAL LBP,uniform,"(24, 3)","{'kernel': 'linear', 'C': 10, 'gamma': 0.0001}",40.2,71.43,70.0,"[[13  7]
+ [ 5 15]]",70.0,26
+MLP,ORIGINAL LBP,uniform,"(24, 3)","{'hidden_layer_sizes': 20, 'solver': 'adam', 'activation': 'identity', 'max_iter': 100}",40.2,71.43,70.0,"[[13  7]
+ [ 5 15]]",70.0,26
