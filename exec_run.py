@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import os
 import argparse
+import warnings
+
+warnings.filterwarnings("ignore")
 
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -37,6 +40,7 @@ VARIANTS = {
 
 def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, output):
     ################ computing image descriptors #######################################
+    print(30 * ' * ')
     print('Experimento: Descritor= {}, Method={}, P = {}, R = {}'.format(VARIANTS[variant], method, P, R))
 
     path_cur = os.path.join(output, 'descriptors', variant, method + '_' + str(P) +'_' +str(R)) 
@@ -124,12 +128,11 @@ def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, ou
                 ['K-Nearest Neighbor', knn, knn_parameters]]
     
     classifiers = [['Random Forest', rf, rf_parameters], ['SVM', svm, svm_parameters], ['MLP', mlp, mlp_parameters],]
-    classifiers = [['SVM', svm, svm_parameters], ['MLP', mlp, mlp_parameters],]
     ################### Starting the train of models ##################################
     for _id, clf, parameters in classifiers:
         np.random.seed(10)
         res_curr = {}
-        print(35 * ' * ')
+        print(35 * ' # ')
         print('Classificando com {}...'.format(_id))
 
         # CROSS-VALIDATION HOLD OUT --> train: 0.8, test:0.2
@@ -145,7 +148,7 @@ def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, ou
         plot_results(_id, res_search['best_clf'], x_test, y_test, method.upper(), VARIANTS[variant], P, R, output)
 
         # Get AUC, F1Score and Accuracy metrics
-        print(35 * '# ')
+        print(25 * '-')
         print('Melhor Parametro: ', res_search['best_parameter']) 
         auc_roc = res_search['auc']
         f1score = res_search['f1score']
