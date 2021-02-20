@@ -15,9 +15,14 @@ if __name__ == '__main__':
  
             for P,R in [(8, 1), (16, 2), (24, 3)]:
                 # inicia treinamento
-                run(dataset=DATASET, variant=VARIANT, method=METHOD, P=P, R=R, size_train_percent=size_train)
+                run(dataset=DATASET, variant=VARIANT, method=METHOD, P=P, R=R,\
+                    size_train_percent=size_train, load_descriptors=False, output='result_paper')
 
     print('Fim dos Experimentos')
 
     runtime = (time.time() - t0) / 60 / 60
     print('Tempo Total: {}h'.format(round(runtime, 2)))
+
+    from utils.facetgrid import plot_facetgrid
+
+    plot_facetgrid(output='result_paper')
