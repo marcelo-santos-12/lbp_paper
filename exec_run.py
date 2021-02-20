@@ -9,6 +9,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.utils import shuffle
 
 # meus modulos
 from lbp_module.texture import base_lbp, improved_lbp, hamming_lbp, completed_lbp, extended_lbp
@@ -54,26 +55,32 @@ def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, ou
     else:
         print('Carregando recursos...')
         if os.path.exists(path_cur):
-            data = np.loadtxt(path_cur + '/data.txt')
-            print(data.shape)
+            data = np.loadtxt(path_cur + '/features.txt')
+
+            length_train = int(size_train_percent * data.shape[0])
+            train = data[:length_train]
+            test = data[length_train:]
+            x_train, y_train = train[:, :-1], train[:, -1]
+            x_test, y_test = test[:, :-1], test[:, -1]
+
         else:
             print("Descritores não computados")
             quit()
+    
+    # Randomiza o dataset para melhorar treinamento
+    x_train, y_train = shuffle(x_train, y_train, random_state=100)
 
     if not os.path.exists(output + '/ARR_ROC'):
         os.makedirs(output + '/ARR_ROC')
     
     arr_file = output + '/ARR_ROC/' + '{}_y_true_{}_{}_{}.txt'.format(variant, method, P, R)
-    print(arr_file)
     np.savetxt(arr_file, y_test)
     
     n_features = x_train[0].shape[0]
-    print('Comprimento do vetor de recursos: ', n_features)
-
     if os.path.exists(output + '/results.csv'):
         df = pd.read_csv(output + '/results.csv')
     else:
-        columns = ['classifier', 'variant', 'method', '(P, R)', 'parameters', \
+        columns = ['variant', 'classifier', 'method', '(P, R)', 'parameters', \
                    'best_matthews','fscore', 'accuracy', 'confusion_matrix','auc_roc', 'n_features']
         df = pd.DataFrame(columns=columns)
 
