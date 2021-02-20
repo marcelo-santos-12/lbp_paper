@@ -9,7 +9,7 @@ import glob
 from sklearn.preprocessing import normalize
 import os
 
-def compute_features(path_dataset, descriptor, P, R, method, size_train):
+def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l2'):
     '''
     Calcula os descritores de todas as imagens inseridas no diretorio do dataset
 
@@ -38,8 +38,15 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train):
         dir_iter = glob.glob(path_class + '/*')
         length_dir = len(dir_iter)
         ind_max_train = int(size_train * length_dir)
+
+        cont = 0
+
+        ind_max_train = 80
     
         for i, name_img in enumerate(tqdm(dir_iter)):
+
+            if cont == 100:
+                break
             
             try:
                 img = cv2.imread(name_img, cv2.IMREAD_GRAYSCALE)
@@ -56,7 +63,7 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train):
             # calcula o array descritor da imagem atual
             feature = descriptor(img, P=P, R=R, block=(1, 1), method=method)
 
-            #feature = normalize(feature.reshape(1, -1), norm='l1').reshape(-1,)
+            feature = normalize(feature.reshape(1, -1), norm='l1').reshape(-1,)
 
             # adiciona ao conjunto de treinamento
             if i < ind_max_train:
@@ -67,5 +74,7 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train):
             else:
                 x_test.append(list(feature))
                 y_test.append(index)
+
+            cont += 1
 
     return np.asarray(x_train), np.asarray(y_train), np.asarray(x_test), np.asarray(y_test)

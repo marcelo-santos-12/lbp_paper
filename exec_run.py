@@ -49,7 +49,7 @@ def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, ou
         all_descriptors_train = np.concatenate([x_train, y_train.reshape(-1, 1)], axis=1)
         all_descriptors_test = np.concatenate([x_test, y_test.reshape(-1, 1)], axis=1)
         all_descriptors = np.concatenate([all_descriptors_train, all_descriptors_test], axis=0)
-        np.savetxt(path_cur + '/data.txt', all_descriptors)
+        np.savetxt(path_cur + '/features.txt', all_descriptors)
 
     else:
         print('Carregando recursos...')
