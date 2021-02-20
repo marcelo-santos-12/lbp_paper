@@ -4,6 +4,9 @@ Contains all the useful scripts for performing experiments with LBP and its vari
 
 Note: Run the following commands in the project's root directory
 
+- Operational System: Debian 10 Buster
+- Python 3.7.3
+
 ```bash
 # Install Virtual Enviroment (Optional but high recommended):
 
@@ -62,6 +65,6 @@ The code will perform the calculation of the Completed LBP descriptor on the ´p
 
 The ´-o´ parameter indicates a folder where the results will be stored. If this folder does not exist, the program will automatically create it.
 
-The parameter -l is a boolean indicating whether you want to load the calculated descriptors in a .txt file so that it is not necessary to recalculate them. If you are going to run the experiment for the first time, this argument should be ignored.
+The ´-l´ parameter is a boolean indicating whether you want to load the calculated descriptors in a `.txt` file so that it is not necessary to recalculate them. If you are going to run the experiment for the first time, this argument should be ignored.
 
 ```
