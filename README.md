@@ -1,11 +1,29 @@
-# lbp_paper
+# Local Binary Patterns: Overview and Application on Helicobacter Pylory
 
 Contains all the useful scripts for performing experiments with LBP and its variants.
 
-Install Virtual Enviroment (Optional but high recommended)
+Note: Run the following commands in the project's root directory
 
-Install Library
+```bash
+# Install Virtual Enviroment (Optional but high recommended):
 
-Run setup.py
+  $ pip install virtualenv (or `pip3 install virtualenv`)
 
-Example
+# Create a vitural enviroment for experimentation:
+
+  $ virtualenv venv_lbp
+
+# Activate the enviroment created
+
+  $ source venv_lbp/bin/activate
+
+# Install Librarys requireds:
+
+  $ pip install -r requirements.txt
+
+# Build the LBP library:
+
+  $ python setup.py build_ext --inplace
+```
+
+Example of use
