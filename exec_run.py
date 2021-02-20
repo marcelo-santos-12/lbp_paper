@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
+import argparse
 
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -168,4 +169,40 @@ def run(dataset, variant, method, P, R, size_train_percent, save_descriptors=Tru
 
 if __name__ == '__main__':
 
-    run(dataset='SAMPLE_10_DATASET_GASTRIC_256', variant='base_lbp', method='uniform', P=24, R=3, size_train_percent=.8)
+    parser = argparse.ArgumentParser()
+
+    # dataset
+    parser.add_argument('--dataset', '-d', help='Dataset that contains the images', type=str, \
+        required=True)
+    
+    # variant
+    parser.add_argument('--variant', '-v',
+        help='Descritor LBP variant accepted: base_lbp, improved_lbp, \
+              extended_lbp, completed_lbp, hamming_lbp', type=str, \
+        required=True) 
+
+    # method
+    parser.add_argument('--method', '-m', help='Method Accepted: `nri_uniform` and `uniform`', type=str,\
+        default='uniform')
+    
+    # P
+    parser.add_argument('--points', '-p', help='Number of points at neighboorhood', type=int, \
+        default=8)
+    
+    # R
+    parser.add_argument('--radius', '-r', help='Radius of points at neighboorhood', type=int, \
+        default=1)
+    
+    # size_train
+    parser.add_argument('--size_train', '-s', help='Length of train dataset', type=float, \
+        default=.8)
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.dataset):
+        print('Invalid Path to dataset...')
+        quit()
+
+
+    run(dataset=args.dataset, variant=args.variant, \
+        method=args.method, P=args.points, R=args.radius, size_train_percent=args.size_train)
