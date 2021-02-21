@@ -12,7 +12,6 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.utils import shuffle
 
 # meus modulos
 from lbp_module.texture import base_lbp, improved_lbp, hamming_lbp, completed_lbp, extended_lbp
@@ -71,9 +70,6 @@ def run(dataset, variant, method, P, R, size_train_percent, load_descriptors, ou
             print("Descritores não computados")
             quit()
     
-    # Randomiza o dataset para melhorar treinamento
-    x_train, y_train = shuffle(x_train, y_train, random_state=100)
-
     if not os.path.exists(output + '/ARR_ROC'):
         os.makedirs(output + '/ARR_ROC')
     

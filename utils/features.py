@@ -45,7 +45,7 @@ def compute_features(path_dataset, descriptor, P, R, method, size_train, norm='l
                 img = cv2.imread(name_img, cv2.IMREAD_GRAYSCALE)
             except:
                 print('Não é possível ler arquivo:', name_img)
-
+            
             # calcula o array descritor da imagem atual
             feature = descriptor(img, P=P, R=R, block=(1, 1), method=method)
 

@@ -12,6 +12,7 @@ from sklearn.metrics._plot.base  import _get_response
 
 from sklearn.base import clone
 from sklearn.neural_network import MLPClassifier
+from sklearn.utils import shuffle
 
 
 class MyGridSearch():
@@ -25,9 +26,13 @@ class MyGridSearch():
         self.results = {}
         self.results['best_matthews'] = -1
 
+        is_mlp = isinstance(self.classifier, MLPClassifier)
+        if is_mlp:
+            x_train, y_train = shuffle(x_train, y_train, random_state=100)
+
         for (i, parameters_i) in enumerate(self.all_parameter_comb):
 
-            if isinstance(self.classifier, MLPClassifier) and len(parameters_i)==5: # gambiarra
+            if is_mlp and len(parameters_i)==5:
                 parameters_i[0] = (parameters_i[0], parameters_i[1])
                 parameters_i.pop(1)
 
